@@ -14,6 +14,7 @@ const jwt = require("jsonwebtoken");
 const { check, validationResult } = require("express-validator");
 
 //requiring the config secret token from files
+const config = require("config");
 
 //requiring User Schema
 const User = require("../../models/User");
@@ -94,6 +95,20 @@ router.post(
           id: user.id
         }
       };
+
+      //signing the jwt token to be set for user
+      //set the payload to be sent, get the secret token from external file, set certain parametrs ie: expiresIn (seconds), cb taking error or token
+      jwt.sign(
+        payload,
+        config.get("jwtSecret"),
+        { expiresIn: 36000 },
+        (err, token) => {
+          //setting error catches OR sending the token in json format
+          if (err) throw err;
+
+          res.json({ token });
+        }
+      );
     } catch (err) {
       console.error(err.message);
       res.status(500).send("Server Error");
