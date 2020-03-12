@@ -7,8 +7,13 @@ const gravatar = require("gravatar");
 //requiring bcryptjs dependency to hash password
 const bcrypt = require("bcryptjs");
 
+//requiring JSONWT
+const jwt = require("jsonwebtoken");
+
 //requiring methods from the expressvalidator dependency
 const { check, validationResult } = require("express-validator");
+
+//requiring the config secret token from files
 
 //requiring User Schema
 const User = require("../../models/User");
@@ -21,7 +26,7 @@ const router = express.Router();
 //@access                  Public
 router.post(
   "/",
-  //express validator middleware : check = test=ing if the user entered correct data in the correwt format = chaining.not().isEmpty() to ensure the firld of data is true
+  //express validator middleware : check = testing if the user entered correct data in the correct format = chaining .not().isEmpty() to ensure the field of data is true
   //Set to an array for multiple checks!!!!!
   //parameters of a check are 1: the parameter being checked 2: an error message
   [
@@ -52,7 +57,9 @@ router.post(
 
       //checking if the user exists : if so 400 error - server error with printed custom error message
       if (user) {
-        res.status(400).json({ errors: [{ msg: "User already exists" }] });
+        return res
+          .status(400)
+          .json({ errors: [{ msg: "User already exists" }] });
       }
       //Get Users gravatar
       //setting avatar equal to the gravatar required at top - setting parameters for the gravatar for profile pic size and rating or set to the default "mm"
@@ -62,7 +69,7 @@ router.post(
         default: "mm"
       });
 
-      //setting a new User using the schema calling new beofre it - then setting the data to its respective inputs
+      //setting a new User using the schema calling new before it - then setting the data to its respective inputs
       user = new User({
         name,
         email,
@@ -81,8 +88,12 @@ router.post(
       await user.save();
 
       //Return the JSONWebtoken
-
-      res.send("User Registered");
+      //setting the payload for the JWT
+      const payload = {
+        user: {
+          id: user.id
+        }
+      };
     } catch (err) {
       console.error(err.message);
       res.status(500).send("Server Error");
