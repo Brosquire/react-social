@@ -4,6 +4,10 @@ const express = require("express");
 const router = express.Router();
 //requiring express-validator
 const { check, validationResult } = require("express-validator");
+//requiring request dependency
+const request = require("request");
+//requiring our config dependency
+const config = require("config");
 
 //requiring auth middlewar
 const auth = require("../../middleware/auth");
@@ -372,6 +376,38 @@ router.delete("/education/:edu_id", auth, async (req, res) => {
 
     //sending back the updated profile education from the database
     res.json(profile);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error");
+  }
+});
+
+//@route  GET api/profile/github/:username
+//@desc   Get user repos from github
+//@access Public
+router.get("/github/:username", async (req, res) => {
+  try {
+    //setting an options object to access repos of specific users github accounts
+    const options = {
+      uri: `https://api.github.com/users/${
+        req.params.username
+      }/repos?per_page=5&sort=created:asc&clinet_id=${config.get(
+        "githubClientID"
+      )}&client_secret=${config.get("githubSecret")}`,
+      method: "GET",
+      headers: { "user-agent": "node.js" }
+    };
+
+    //using the request dependency to access the github repos by user profile through its parameters specified through the options object we created
+    request(options, (error, response, body) => {
+      if (error) console.error(error);
+
+      if (response.statusCode !== 200) {
+        return res.status(404).json({ msg: "No Github profile found" });
+      }
+
+      res.json(JSON.parse(body));
+    });
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
