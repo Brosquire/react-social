@@ -1,7 +1,11 @@
 import React, { Fragment, useState } from "react";
+import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
 
-const Register = () => {
+import { setAlert } from "../../actions/alert";
+
+const Register = ({ setAlert }) => {
   //setting our state data needed to populate our forms and capture user input and setting it to the useState() hook function
   //first parameter in the array is similar to  state = name it whatever is conventional for the app and readability
   //the second parameter is similar to  setState({}) = name it in line with the first parameter
@@ -25,7 +29,9 @@ const Register = () => {
     e.preventDefault();
     //checking if both passwords entered match before submitting
     if (password !== password2) {
-      console.log("Passwords Do Not Match");
+      //calling our setAlert action being passed through props and connected to the component at the bottom of the file passing our setAlert as an object
+      //our second parametr being passed is the alertType for dynamic styling
+      setAlert("Passwords Do Not Match", "danger");
     } else {
       console.log("Success");
     }
@@ -92,5 +98,8 @@ const Register = () => {
     </Fragment>
   );
 };
+Register.propTypes = {
+  setAlert: PropTypes.func.isRequired
+};
 
-export default Register;
+export default connect(null, { setAlert })(Register);
