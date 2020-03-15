@@ -7,8 +7,12 @@ import alert from "./alert";
 //importing our auth reducer
 import auth from "./auth";
 
+//importing profile reducer
+import profile from "./profile";
+
 //exporting the reducers combined
 export default combineReducers({
   alert,
-  auth
+  auth,
+  profile
 });

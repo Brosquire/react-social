@@ -18,3 +18,7 @@ export const LOGIN_FAIL = "LOGIN_FAIL";
 
 //Lgout Type
 export const LOGOUT = "LOGOUT";
+
+//Profile Types
+export const PROFILE_ERROR = "PROFILE_ERROR";
+export const GET_PROFILE = "GET_PROFILE";
