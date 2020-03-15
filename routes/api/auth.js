@@ -29,9 +29,6 @@ const User = require("../../models/User");
 //adding auth as a parameter makes the route secure
 router.get("/", auth, async (req, res) => {
   try {
-    //setting user equal to a Promise (async/await method instead) searching by id = findById(search parameter)
-    //req.user is available to all protected routes thanks to our exported middleware saving the decoded user authentication in our headers
-    //chaining .select("-password") excludes the password from being sent back from the server
     const user = await User.findById(req.user.id).select("-password");
     res.json(user);
   } catch (err) {
@@ -95,8 +92,8 @@ router.post(
       jwt.sign(
         payload,
         config.get("jwtSecret"),
-        { expiresIn: 36000 },
-        (token, err) => {
+        { expiresIn: 360000 },
+        (err, token) => {
           if (err) throw err;
 
           res.json({ token });
@@ -104,7 +101,7 @@ router.post(
       );
     } catch (err) {
       console.error(err.message);
-      res.status(500).json("Server Error");
+      res.status(500).send("Server Error");
     }
   }
 );

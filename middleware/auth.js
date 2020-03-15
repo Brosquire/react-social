@@ -1,32 +1,27 @@
-//This file is to authenticate user JWT for secured header based on User
-
-//requiring jwt
 const jwt = require("jsonwebtoken");
-
-//requiring config
 const config = require("config");
 
-//exporting middleware authentication
 module.exports = function(req, res, next) {
-  //Get the token from the header
+  // Get token from header
   const token = req.header("x-auth-token");
 
-  //Check if there is no token
+  // Check if not token
   if (!token) {
-    return res.status(401).json({ msg: "No token, Authorization denied" });
+    return res.status(401).json({ msg: "No token, authorization denied" });
   }
 
-  //Verify token
+  // Verify token
   try {
-    //decoding token if user has token
-    const decoded = jwt.verify(token, config.get("jwtSecret"));
-
-    //setting the requested user = to the decoded user payload we made in user.js routes
-    req.user = decoded.user;
-
-    //moving to the next function
-    next();
+    jwt.verify(token, config.get("jwtSecret"), (error, decoded) => {
+      if (error) {
+        res.status(401).json({ msg: "Token is not valid" });
+      } else {
+        req.user = decoded.user;
+        next();
+      }
+    });
   } catch (err) {
-    res.status(410).json({ msg: "Token is not valid" });
+    console.error("something wrong with auth middleware");
+    res.status(500).json({ msg: "Server Error" });
   }
 };

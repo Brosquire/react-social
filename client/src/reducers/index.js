@@ -4,7 +4,11 @@ import { combineReducers } from "redux";
 //importing our alert reducer
 import alert from "./alert";
 
+//importing our auth reducer
+import auth from "./auth";
+
 //exporting the reducers combined
 export default combineReducers({
-  alert
+  alert,
+  auth
 });

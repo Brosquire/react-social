@@ -1,11 +1,12 @@
 import React, { Fragment, useState } from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
 
 import { setAlert } from "../../actions/alert";
+import { register } from "../../actions/auth";
 
-const Register = ({ setAlert }) => {
+const Register = ({ setAlert, register, isAuthenticated }) => {
   //setting our state data needed to populate our forms and capture user input and setting it to the useState() hook function
   //first parameter in the array is similar to  state = name it whatever is conventional for the app and readability
   //the second parameter is similar to  setState({}) = name it in line with the first parameter
@@ -33,9 +34,14 @@ const Register = ({ setAlert }) => {
       //our second parametr being passed is the alertType for dynamic styling
       setAlert("Passwords Do Not Match", "danger");
     } else {
-      console.log("Success");
+      register({ name, email, password });
     }
   };
+
+  //Redirect if user is logged in
+  if (isAuthenticated) {
+    return <Redirect to='/dashboard' />;
+  }
 
   return (
     <Fragment>
@@ -99,7 +105,13 @@ const Register = ({ setAlert }) => {
   );
 };
 Register.propTypes = {
-  setAlert: PropTypes.func.isRequired
+  setAlert: PropTypes.func.isRequired,
+  register: PropTypes.func.isRequired,
+  isAuthenticated: PropTypes.bool
 };
 
-export default connect(null, { setAlert })(Register);
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated
+});
+
+export default connect(mapStateToProps, { setAlert, register })(Register);
