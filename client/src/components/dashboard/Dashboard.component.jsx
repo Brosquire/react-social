@@ -1,14 +1,44 @@
-import React, { useEffect } from "react";
+import React, { useEffect, Fragment } from "react";
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
+import Spinner from "../layout/Spinner.component";
+import { DashboardActions } from "./DashboardActions";
 import { getCurrentProfile } from "../../actions/profile";
 
-const Dahboard = ({ getCurrentProfile, auth, profile }) => {
+const Dahboard = ({
+  getCurrentProfile,
+  auth: { user },
+  profile: { profile, loading }
+}) => {
+  //grabbing the current profile through or profile reducer to persist - Private Routte
   useEffect(() => {
     getCurrentProfile();
   }, []);
-  return <div>Dashboard</div>;
+  return loading && profile === null ? (
+    <Spinner />
+  ) : (
+    <Fragment>
+      <h1 className='large text-primary'>Dashboard</h1>
+      <p className='lead'>
+        <i className='fas fa-user'>Welcome {user && user.name}</i>
+      </p>
+      {profile !== null ? (
+        <Fragment>
+          <DashboardActions />
+        </Fragment>
+      ) : (
+        <Fragment>
+          Youy have not yet setup a profile. Please add some info to your
+          profile. <br />
+          <Link to='/create-profile' className='btn btn-primary my-1'>
+            Create Profile
+          </Link>
+        </Fragment>
+      )}
+    </Fragment>
+  );
 };
 
 Dahboard.propTypes = {
