@@ -1,0 +1,7 @@
+{
+  "mongoURI": "mongodb+srv://brosquire:Cookies29@social-ydhsb.mongodb.net/test?retryWrites=true&w=majority",
+  "jwtSecret": "mysecrettoken",
+  "githubClientID": "9351e36d5c0f62e4365f",
+  "githubSecret": "70e8741d30e28b6d969ae2ddeb30a977f217ca28",
+  "githubToken": "731288f61c11b0a63bb43ecaaba6abcb47e19dc0"
+}
