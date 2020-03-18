@@ -18,7 +18,7 @@ const Dahboard = ({
   //grabbing the current profile through or profile reducer to persist - Private Routte
   useEffect(() => {
     getCurrentProfile();
-  }, []);
+  }, [getCurrentProfile]);
   return loading && profile === null ? (
     <Spinner />
   ) : (

@@ -10,9 +10,13 @@ import auth from "./auth";
 //importing profile reducer
 import profile from "./profile";
 
+//importing post reducer
+import post from "./post";
+
 //exporting the reducers combined
 export default combineReducers({
   alert,
   auth,
-  profile
+  profile,
+  post
 });
